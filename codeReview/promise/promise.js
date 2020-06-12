@@ -4,97 +4,180 @@
  */
 
 
- // 说明 promise 状态一般有 pending resolved rejected
- // 内部函数有 resolve/reject
+ // 说明 promise 状态一般有 pending fulfilled rejected
+ // 内部函数有 resolve/reject resolve将 pending 转化为fulfilled reject => rejected
 
- function jPromise(executor) {
-   const _this = this; // 缓存当前指向
-   _this.status = 'pending'; // 默认转换状态
-   _this.successValue = undefined; // 正确回调时出现的值
-   _this.errorValue = undefined; // 错误回调时的值
+ class junhoPromise {
+   constructor(executor) {
+     this.value = undefined;
+     this.reason = undefined; 
+     this.state = 'pending';
+     
+     // 存储异步任务
+    this.resolveCallbacks = []
+    this.rejectedCallbaks = []
 
-   _this.onResolvedCallbacks = []; // 存储成功的回调函数
-   _this.onRejectedCallbacks = []; // 存储失败的回调函数
+     const resolve = (value) => {
+       if (this.state = 'pending') {
+         this.state = 'fulfilled'
+         this.value = value
+         this.resolveCallbacks.forEach(fn => fn())
+       }
+     }
 
-  // 处理正确回调值的函数
-   function resolve(value) {
-     // 只有状态为pending 才能转换为 resolved 或 rejected
-    if (_this.status === 'pending') {
-      _this.status = 'resolved';
-      _this.successValue = value;
-      _this.onResolvedCallbacks.forEach(function(fn){ // 当成功的函数被调用时，之前缓存的回调函数会被一一调用
-        fn();
-      });
-    }
-   }
-   // 处理错误回调值的函数
-   function reject(value) {
-     if (_this.status === 'pending') {
-       _this.status = 'rejected';
-       _this.errorValue = value;
-       console.log(_this.onRejectedCallbacks);
-       _this.onRejectedCallbacks.forEach(function(fn){// 当失败的函数被调用时，之前缓存的回调函数会被一一调用
-        fn();
-      });
+     const reject = (value) => {
+       if (this.state = 'pending') {
+        this.state = 'rejected'
+        this.reason = value
+        this.rejectedCallbaks.forEach(fn => fn())
+       }
+     }
+     
+     try {
+      executor(resolve, reject);
+     } catch(e) {
+       console.log(e)
      }
    }
 
-   try {
-    executor(resolve, reject);
-   } catch (e) {
-     reject(e);
+   then(onFulfilled, onRejected) {
+    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
+    onRejected = typeof onRejected === 'function' ? onRejected : error => { throw error }
+    const newPromise = new junhoPromise((resolve, reject) => {
+      if (this.state === 'fulfilld') {
+        this.resolveCallbacks.push(() => {
+          try {
+            const result = onFulfilled(this.value)
+            resolvePromise(newPromise, result, resolve, reject)
+           } catch (err) {
+             reject(err)
+           }
+        });
+       } else if (this.state === 'rejected') {
+        this.rejectedCallbaks.push(() => {
+          try {
+           const result = onRejected(this.reason)
+           resolvePromise(newPromise, result, resolve, reject)
+          } catch (err) {
+            reject(err)
+          }
+        });
+       } else {
+         // 此时为pending状态
+         this.resolveCallbacks.push(() => {
+            try {
+              const result = onFulfilled(this.value)
+              resolvePromise(newPromise, result, resolve, reject)
+             } catch (err) {
+               reject(err)
+             }
+          });
+         this.rejectedCallbaks.push(() => {
+           try {
+            const result = onRejected(this.reason)
+            resolvePromise(newPromise, result, resolve, reject)
+           } catch (err) {
+             reject(err)
+           }
+         });
+       }
+     });
+     return newPromise;
    }
  }
-
- jPromise.prototype.then = function(onFulfilled, onRejected) {
-  const _this = this; // 缓存当前指向
-
-  /**
-   * @description 重新创建新的Promise并返回该Promise
-   * @param {String}} status 
-   * @param {*} value 
-   * @param {*} errorValue 
-   */
-  function newJPromise(status, value, errorValue) {
-    return new jPromise((resolve, reject) => {
-      let x;
-      switch(status) {
-        case 'resolved': 
-          _this.onResolvedCallbacks.push(function(){
-            x = onFulfilled(value);
-            resolve(x);
-          });
-          break;
-        case 'rejected':
-          console.log('测试');
-          _this.onRejectedCallbacks.push(function(){
-            x = onRejected(errorValue);
-            reject(x);
-          });
-          break;
-        default: 
-          // 每次Promise的状态是pending时将回调函数存储进对应位置
-          // 这样做的目的是为了先将Promise实例时先将异步任务队列的数据缓存起来
-          // 等待执行对应的resolve/reject时在执行对应数据
-          _this.onResolvedCallbacks.push(function(){ // 这里用一个函数包起来，是为了后面加入新的逻辑进去
-            onFulfilled(value)
-          });
-          _this.onRejectedCallbacks.push(function(){
-            onRjected(errorValue)
-          });
-          break;
+ 
+ // 将函数转换为符合Promise规范
+ // 防止重复调用
+ // 传入如果是promise继续解析
+ // 有传入对象里面携带then时会处理操作并防止重复调用
+ function resolvePromise(promise2, x, resolve, reject) {
+  if (promise2 === x) {
+    throw new Error('拒绝循环引用数据');
+  }
+  if (x instanceof junhoPromise) {
+    if (x.state === 'pending') {
+      x.then(
+        y => {
+          resolvePromise(promise2, y, resolve, reject);
+        },
+        reason => {
+          reject(reason);
+        }
+      );
+    } else {
+      x.then(resolve, reject);
+    }
+  } else if (x && (typeof x === 'function' || typeof x === 'object')) {
+    let called = false;
+    try {
+      let then = x.then;
+      if (typeof then === 'function') {
+        then.call(
+          x,
+          y => {
+            if (called) return;
+            called = true;
+            resolvePromise(promise2, y, resolve, reject);
+          },
+          r => {
+            if (called) return;
+            called = true;
+            reject(r);
+          }
+        );
+      } else {
+        resolve(x);
       }
+    } catch (e) {
+      if (called) return;
+      called = true;
+      reject(e);
+    }
+  } else {
+    resolve(x);
+  }
+}
+
+// 语法糖简化操作
+junhoPromise.defer = junhoPromise.deferred = function () {
+  let obj = {}
+  new junhoPromise((resolve, reject) => {
+    obj.resolve = resolve;
+    obj.reject = reject;
+  })
+  return obj;
+}
+
+junhoPromise.resolve = function(value) {
+  return new junhoPromise((resolve, reject) => {
+    resolve(value)
+  })
+}
+
+// 拓展方法
+junhoPromise.reject = function(reason) {
+  return new junhoPromise((resolve, reject) => {
+    reject(reason)
+  })
+}
+
+junhoPromise.catch = function(onReject) {
+  return this.then(null, onReject)
+}
+
+junhoPromise.finally = function(callback) {
+  return this.then(res => {
+    junhoPromise.resolve(callback()).then(() => {
+      return value;
     });
-  }
+  },
+    (err) => {
+      return junhoPromise.resolve(callback()).then(() => {
+          throw err;
+    });
+  });
+}
 
-  switch (_this.status) {
-    case 'resolved':
-      return newJPromise(_this.status, _this.successValue);
-    case 'rejected':
-      return newJPromise(_this.status, '',_this.errorValue);
-    default:
-      return newJPromise(_this.status,  _this.successValue, _this.errorValue);
-  }
- }
+// 待补充race跟all
 
- module.exports = jPromise;
+ module.exports = junhoPromise;
