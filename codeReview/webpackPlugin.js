@@ -37,4 +37,4 @@ junhoPlugin.prototype.apply = function(complier) {
   })
 }
 
-module.export = junhoPlugin
+module.export = junhoPlugin;
