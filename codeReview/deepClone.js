@@ -18,7 +18,7 @@ function deepClone(value) {
         }
         break;
       default: 
-        cacheData = value.valueOf();
+        cacheData = value;
         break;
     }
     return cacheData;
