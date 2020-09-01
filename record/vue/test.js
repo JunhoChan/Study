@@ -24,11 +24,41 @@
 // console.log(foo.y);
 // foo.test()
 
-const obj = {}
-// 检查可枚举数据类型
-console.log(obj.hasOwnProperty('__proto__')) // 但是obj.__proto__已经指向内部的Object.prototype,所以在浏览器打印是有的
-console.log(obj.hasOwnProperty('prototype'))
-console.log(obj.__proto__)
+// const obj = {}
+// // 检查可枚举数据类型
+// console.log(obj.hasOwnProperty('__proto__')) // 但是obj.__proto__已经指向内部的Object.prototype,所以在浏览器打印是有的
+// console.log(obj.hasOwnProperty('prototype'))
+// console.log(obj.__proto__)
 
-const funA = function () {}
-console.log(funA.hasOwnProperty('prototype'))
+// const funA = function () {}
+// console.log(funA.hasOwnProperty('prototype'))
+
+
+// 柯里化函数返回预编译的函数
+// function a(s) {
+//   return function(y) {
+//     return s + y; 
+//   }
+// }
+
+// console.log(a(1)(2))
+
+// add(1, 2, 3)(4)       
+// add(1)(2)(3)(4)(5) 
+
+function add() {
+  const params = Array.prototype.slice.call(arguments) || []
+  const _add = function () {
+    params.push([...arguments])
+    return _add
+  }
+  // 利用toString隐士转换
+  _add.toString = function () {
+    return params.reduce((pre, value) => {
+      return pre * 1 + value * 1
+    }, 0)
+  }
+  return _add
+}
+
+console.log(add(2,3)(2)(1).toString())

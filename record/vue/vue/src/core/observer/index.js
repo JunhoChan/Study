@@ -124,7 +124,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     ob = new Observer(value)
   }
   if (asRootData && ob) {
-    ob.vmCount++
+    ob.vmCount++// 当前观察者的位置
   }
   return ob
 }

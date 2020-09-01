@@ -54,9 +54,9 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm) // 初始化渲染数据，并设置2个响应式数据 $attrs 跟 $listeners
     callHook(vm, 'beforeCreate')// 生命周期函数beforeCreate触发
     initInjections(vm) // resolve injections before data/props 将inject定义为响应式数据
-    initState(vm)
+    initState(vm) // 初始
     initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    callHook(vm, 'created')// 此时 data props computed已经是响应式数据了
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -64,7 +64,7 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+     // 开始挂在元素节点
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

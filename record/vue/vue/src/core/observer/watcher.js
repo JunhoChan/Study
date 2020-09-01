@@ -163,10 +163,10 @@ export default class Watcher {
    */
   update () {
     /* istanbul ignore else */
-    if (this.lazy) {
-      this.dirty = true
+    if (this.lazy) {// computed  一般都是懒加载
+      this.dirty = true 
     } else if (this.sync) {
-      this.run()
+      this.run()// 异步更新的数据
     } else {
       queueWatcher(this)
     }

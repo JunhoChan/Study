@@ -113,7 +113,7 @@ export function renderMixin (Vue: Class<Component>) {
     if (Array.isArray(vnode) && vnode.length === 1) {
       vnode = vnode[0]
     }
-    // return empty vnode in case the render function errored out
+    // 到这一步如果上面的节点数据没有转换成vnode对象就会报错
     if (!(vnode instanceof VNode)) {
       if (process.env.NODE_ENV !== 'production' && Array.isArray(vnode)) {
         warn(

@@ -174,9 +174,10 @@ export function queueWatcher (watcher: Watcher) {
       while (i > index && queue[i].id > watcher.id) {
         i--
       }
+      // 将watch插入对应的排序位置
       queue.splice(i + 1, 0, watcher)
     }
-    // queue the flush
+    // queue the flush 队列正在运行
     if (!waiting) {
       waiting = true
 
