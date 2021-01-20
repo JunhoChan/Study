@@ -65,5 +65,18 @@ new Watcher(vm, updateComponent, noop, {
 <br/><br/>
 
 
-## render函数处理
+## render函数处理 
+> render函数将实例渲染成一个虚拟Vnode
+```js
+// 处理父Vnode节点，这样可以让当前实例访问父插槽数据
+if (_parentVnode) {
+    vm.$scopedSlots = _parentVnode.data.scopedSlots || emptyObject
+  }
+// 注意这里调用类createElement 方法转换为Vnode
+ vnode = render.call(vm._renderProxy, vm.$createElement)
+```
+
+## Vnode说明
+> Vnode是用JSObject来说明真实Dom节点的情况，是对真实Dom对一种抽象式封装，具体数据类似[参考](https://blog.csdn.net/kisty_yao/article/details/87615744)
+
 
