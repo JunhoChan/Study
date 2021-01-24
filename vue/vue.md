@@ -96,17 +96,6 @@ if (_parentVnode) {
  > 1. 如果有旧节点没有新节点直接调用销毁钩子
  > 2. 如果没有旧节点直接创建DOM元素
  > 3. 如果没有旧节点的真实元素并且新旧节点相同Fiff算法Vnode的区别（一般进行root对比），并将有区别的Vnode存进insertedVnodeQueue数组
- > 4. 创建当前元素点,首先创建子元素dom节点，在将当前dom节点绑定到父级
-```js
-createChildren(vnode, children, insertedVnodeQueue)
-if (isDef(data)) {
-  invokeCreateHooks(vnode, insertedVnodeQueue)
-}
-insert(parentElm, vnode.elm, refElm)
-// 注意这里是vnode的child先存，在存父节点Vnode
-```
-* 疑问一、如果多组件创建、Patch做了什么工作
- ```
- 1. 子组件VNode通过 new Vue(option) 一个实例child 之后child.$mount(undefined, false) 加载当前组件
- 2. 并进行初始化进入Vm.$mount(vm.$option.el)
- ```
+ > 4. 创建当前元素点、
+
+ 
