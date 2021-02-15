@@ -107,6 +107,7 @@ insert(parentElm, vnode.elm, refElm)
 ```
 * 疑问一、如果多组件创建、Patch做了什么工作
  ```
- 1. 子组件VNode通过 new Vue(option) 一个实例child 之后child.$mount(undefined, false) 加载当前组件
- 2. 并进行初始化进入Vm.$mount(vm.$option.el)
+ 1. 子组件VNode通过 new Vue(option) 一个实例child
+ 2. 进行初始化进入Vm.$mount(vm.$option.el)
+  
  ```

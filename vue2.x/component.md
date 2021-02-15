@@ -24,3 +24,4 @@ Vue.extend = (extendOptions) => {
 ```
 
 2. 构造父子函数、安装组件钩子函数最后返回组件的Vnode结点
+
