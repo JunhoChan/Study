@@ -30,3 +30,9 @@ while(shouldContinue()){
 ## nodeJs多线程与单线程
 * nodejs主线程触发事件的处理是单线程
 * node多线程处理依赖libuv库的执行,llibuv默认开启4个线程size
+
+* node多线程的作用: 减少用户等待的时间、避免服务堵塞，请求进入等待状态
+```js
+// cluster多线程处理
+// 使用nodejs内置的cluster module可以让多个node实例同时运行，管理多个node实例。
+```
