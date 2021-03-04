@@ -69,6 +69,14 @@ let tep
 const name = "junho"
 ```
 
+```js
+// 创建Object对象
+const obj = Object.create(null)
+obj.__protp__ = xxx.prototype
+xxx.call(obj)
+return obj
+```
+
 ## 原型及原型链
 * 每个函数都有一个prototype属性，这个属性指向函数的原型对象。
 * Person(构造函数) -> prototype -> Person.prototype

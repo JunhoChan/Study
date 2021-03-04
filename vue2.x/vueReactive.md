@@ -171,7 +171,7 @@ new Watcher(vm, updateComponent, noop, {
 ```
 
 ## Vue对数据更新到Dom更新是一个异步过程，所以这里利用到jS运行任务的机制
-* 将所有同步任务推送到执行Stack、在去执行任务队列里面到任务
+* 将所有同步任务推送到执行Stack、在去执行任务队列里面到任务ƒ
 * 任务又分为2类宏任务、微任务
 1. 宏任务 setTimeout、setImdediate、、MessageChannel
 2. 微任务: promise、async、generate、process.nextTick、 MutationObsever
