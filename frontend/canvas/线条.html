@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>线条</title>
+</head>
+<body>
+<div id="canvas-warp">
+    <canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 50px auto;">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+</div>
+
+<script>
+  window.onload = function(){
+      var canvas = document.getElementById("canvas");
+      canvas.width = 800;
+      canvas.height = 600;
+      var context = canvas.getContext("2d");
+      
+      context.beginPath();
+      context.moveTo(100,100);
+      context.lineTo(150,200);
+      context.lineTo(100,200);
+      context.lineTo(100, 100);
+      context.lineWidth = 5;
+      context.strokeStyle = "#AA394C";
+      context.stroke(); // 🖊拿起来
+      context.closePath();        //使用closePath()闭合图形
+
+    //   context.moveTo(300,100); // 拿起旧🖊绘画
+    //   context.lineTo(500,300);
+    //   context.lineTo(300,500);
+    //   context.lineWidth = 5;
+    //   context.strokeStyle = "purple"; // 覆盖旧的颜色
+    //   context.stroke();
+
+    //   context.beginPath(); // 拿起新🖊绘画
+    //   context.moveTo(500,100);
+    //   context.lineTo(700,300);
+    //   context.lineTo(500,500);
+    //   context.lineWidth = 5;
+    //   context.strokeStyle = "black"; // 不会覆盖上面的颜色,这是边线的颜色
+    //   context.stroke();
+
+      context.fillStyle = "red"; // 未闭合的图形无法绘制背景色
+      context.fill();                 //确定填充
+  }
+  
+  var length = 10;
+  function fn() {
+  return this.length + 1;
+  }
+  console.log(fn())
+  var obj1 = {
+  length: 5,
+    test1: function() {
+      return fn()
+  }
+  }
+  obj1.test2 = fn;
+console.log(obj1.test1.call())
+console.log(obj1.test1())
+console.log(obj1.test2.call())
+console.log(obj1.test2())
+
+
+(()=>{}).bind(this)
+</script>
+</body>
+</html>

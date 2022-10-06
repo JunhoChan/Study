@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制矩形</title>
+</head>
+<body>
+  <h1>测试标题</h1>
+  <!-- <img id="test" alt="测试" src="./test.jpg" style="width: auto;height:300px;" /> -->
+  <!-- <canvas id="test"></canvas> -->
+<script>
+  // const img = document.getElementById("test")
+  // console.log(img.naturalWidth)
+  // console.log(img.clientWidth)
+
+  const _createPiece = (img) => {
+      const SPLIT_SIZE = 100 // 分割大小 600px
+      const row = Math.ceil(img.naturalHeight / SPLIT_SIZE)
+
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext('2d')
+
+      let wpiece = Math.floor(img.naturalWidth)
+      let hpiece = Math.floor(img.naturalHeight / row)
+      let src = ''
+      const imgList = []
+
+      canvas.width = wpiece
+      canvas.height = hpiece
+      console.log("原宽度" + image.naturalWidth + "    原高度" + image.naturalHeight)
+      console.log("切片宽度" + wpiece + "    切片高度" + hpiece)
+      for (let i = 0; i < row; i++) {
+        // 绘图
+        console.log(`(${0 + "," +i * hpiece})`, `(${wpiece +","+ hpiece})`, `(${0 +","+ 0})`, `(${wpiece + "," + hpiece})`)
+        ctx.drawImage(img, 0, i * hpiece, wpiece, hpiece, 0, 0, wpiece, hpiece)
+      //   // canvas 转 base64
+      //   src = canvas.toDataURL()
+      //   // base64 转 blob
+      //   const res = await fetch(src)
+      //   const blob = await res.blob()
+      //   // base 64转 file
+      //   const file = new File([blob], 'File name', { type: 'image/png' })
+      //   // file 上传到 文件服务器
+      //   const uploadRes = await Apis.UPLOAD_IMAGE(file)
+      //   // 返回 url 图片存储的 地址
+      //   const url = uploadRes.data.url
+      //   // 按切片顺序 保存url
+      //   imgList.push(url)
+      }
+      return imgList
+    }
+
+  const image = new Image()
+  image.onload = () => {
+    const imgList = _createPiece(image)
+  }
+  image.src="./test.jpg"
+</script>
+</body>
+</html>
